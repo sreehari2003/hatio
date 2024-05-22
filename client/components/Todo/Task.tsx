@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { IconDelete, IconEdit, IconTickCircle } from "../icons";
-import { NewTodo } from "./NewTodo";
+import { NewTask } from "@app/components/Todo/NewTask";
 import { toast } from "sonner";
 import { apiHandler } from "@app/config/apiHandler";
+import { Todo } from "@app/types";
 
 interface Prop {
   title: string;
@@ -10,7 +11,7 @@ interface Prop {
   id: number;
   endDate: Date;
   deleteTask: (id: number) => Promise<void>;
-  updateTodo: (id: number, updatedTaskProperties: TaskType) => void;
+  updateTodo: (id: number, updatedTaskProperties: Partial<Todo>) => void;
   getTodo: () => Promise<void>;
 }
 
@@ -60,7 +61,7 @@ export const Task = ({
       <p className={isEditable ? "hidden" : ""}>{description}</p>
 
       {isEditable && (
-        <NewTodo
+        <NewTask
           setTodo={() => {}}
           cancelTodo={setEdiatble}
           defaultValue={{

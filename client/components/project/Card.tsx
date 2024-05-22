@@ -5,7 +5,7 @@ type Prop = {
   id: string;
 };
 
-export const OrgCard = ({ name, id }: Prop) => {
+export const ProjectCard = ({ name, id }: Prop) => {
   const router = useRouter();
 
   const goToProject = () => {

@@ -6,7 +6,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
-export class TodoService {
+export class ProjectService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getAllProjects(userId: string) {
