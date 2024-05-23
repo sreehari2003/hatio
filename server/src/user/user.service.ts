@@ -70,4 +70,29 @@ export class UserService {
       });
     }
   }
+
+  async getUserInfo(id: string) {
+    try {
+      const data = await this.prisma.user.findUnique({
+        where: {
+          id,
+        },
+      });
+
+      if (!data) {
+        throw new NotFoundException();
+      }
+
+      data.password = undefined;
+      data.refreshToken = undefined;
+
+      return {
+        ok: true,
+        message: 'User found successfully',
+        data,
+      };
+    } catch {
+      throw new NotFoundException();
+    }
+  }
 }

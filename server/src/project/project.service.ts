@@ -67,4 +67,33 @@ export class ProjectService {
       throw new InternalServerErrorException();
     }
   }
+
+  async editProject(userId: string, projectId: string, name: string) {
+    try {
+      await this.prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          projects: {
+            update: {
+              where: {
+                id: projectId,
+              },
+              data: {
+                title: name,
+              },
+            },
+          },
+        },
+      });
+
+      return {
+        ok: true,
+        message: 'name updated successfully',
+      };
+    } catch {
+      throw new InternalServerErrorException();
+    }
+  }
 }

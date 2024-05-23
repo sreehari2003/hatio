@@ -19,7 +19,7 @@ export const useTodo = () => {
         try {
           toggleLoading.on();
           const { data } = await apiHandler.get<ServerResponse<Todo[]>>(
-            `/projects/${id}`
+            `/project/${id}`
           );
           setTodo(data.data);
         } catch {

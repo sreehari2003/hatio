@@ -1,11 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {
-  useMemo,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { useMemo, createContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { apiHandler } from "@app/config/apiHandler";
 import { User, Child } from "@app/types";
@@ -26,7 +20,7 @@ export const AuthContext = ({ children }: Child): JSX.Element => {
   const getUser = async () => {
     try {
       setLoading(true);
-      const { data } = await apiHandler.get("/user");
+      const { data } = await apiHandler.get("/auth/user");
       setData(data);
     } catch (e) {
       console.error("Error Authenticating user");
@@ -39,9 +33,7 @@ export const AuthContext = ({ children }: Child): JSX.Element => {
   const clearData = () => {
     setData(null);
   };
-  // todo
-  // @sreehari2003
-  // convert this to react query by fixing the caching problem
+
   useEffect(() => {
     getUser();
   }, []);
@@ -55,21 +47,21 @@ export const AuthContext = ({ children }: Child): JSX.Element => {
     [isLoading, data]
   );
 
+  useEffect(() => {
+    // auth user dont need to visit auth page
+    if (!isLoading) {
+      if (router.pathname === "/auth" && data) {
+        router.push("/");
+      }
+      if (router.pathname !== "/auth" && !data) {
+        router.push("/auth");
+      }
+    }
+  }, [router, data]);
+
   return (
     <AuthCtx.Provider value={response}>
       <>{children}</>
     </AuthCtx.Provider>
   );
-};
-
-export const AuthGuard = ({ children }: Child): JSX.Element => {
-  const router = useRouter();
-  const ctx = useContext(AuthCtx);
-  useEffect(() => {
-    if (!ctx.isLoading && !ctx.user) {
-      router.push("/");
-    }
-  }, [router, ctx.user, ctx.isLoading]);
-
-  return <>{children}</>;
 };

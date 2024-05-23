@@ -1,11 +1,11 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class CreateUserDto {
+export class EditProjectDto {
   @IsString()
   @IsNotEmpty()
-  email: string;
+  projectId: string;
 
   @IsString()
   @IsNotEmpty()
-  password: string;
+  name: string;
 }

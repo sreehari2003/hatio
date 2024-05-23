@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { ProjectModule } from './project/project.module';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { TodoModule } from './todo/todo.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { PrismaModule } from './prisma/prisma.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    TodoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
