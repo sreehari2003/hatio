@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -12,6 +13,16 @@ export class UserService {
 
   async createUser(email: string, password: string) {
     try {
+      const userInfo = await this.prisma.user.findUnique({
+        where: {
+          email: email,
+        },
+      });
+
+      if (userInfo) {
+        throw new ConflictException();
+      }
+
       const hashedPassword = await bcrypt.hash(password, 10);
       const user = await this.prisma.user.create({
         data: {
@@ -25,9 +36,13 @@ export class UserService {
         message: 'user was created successfully',
       };
     } catch (e) {
-      throw new InternalServerErrorException({
-        error: e,
-      });
+      if (e instanceof ConflictException) {
+        throw new ConflictException();
+      } else {
+        throw new InternalServerErrorException({
+          error: e,
+        });
+      }
     }
   }
 

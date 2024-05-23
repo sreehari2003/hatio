@@ -19,7 +19,7 @@ export class AuthService {
 
   async login(user) {
     try {
-      const token = await this.generateAuthToken(user.uid);
+      const token = await this.generateAuthToken(user.id);
       return token;
     } catch (e) {
       if (e instanceof UnauthorizedException) {

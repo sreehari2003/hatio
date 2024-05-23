@@ -57,7 +57,6 @@ export class ProjectService {
       return {
         ok: true,
         message: 'project created successfully',
-        data,
       };
     } catch (e) {
       if (e instanceof NotFoundException) {

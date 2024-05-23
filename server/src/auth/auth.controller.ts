@@ -28,7 +28,7 @@ export class AuthController {
   @Post('login')
   async login(@Request() req, @Response() res) {
     const tokens = await this.authService.login(req.user);
-    cookieHandler(res, tokens, true);
+    cookieHandler(res, tokens, false);
   }
 
   @Post('register')

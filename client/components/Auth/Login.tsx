@@ -6,6 +6,7 @@ import { authSchema } from "./common";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { apiHandler } from "@app/config/apiHandler";
 import { toast } from "sonner";
+import { useRouter } from "next/router";
 
 type FormValues = z.infer<typeof authSchema>;
 
@@ -18,12 +19,15 @@ export const Login = ({ toggleOption }: Prop) => {
     resolver: zodResolver(authSchema),
   });
 
+  const router = useRouter();
+
   const onSubmit = async (data: FormValues) => {
     try {
       await apiHandler.post("/auth/login", {
         ...data,
       });
       toast.success("login success");
+      router.push("/");
     } catch {
       toast.error("error login");
     }

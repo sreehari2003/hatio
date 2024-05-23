@@ -50,6 +50,7 @@ export const AuthContext = ({ children }: Child): JSX.Element => {
   useEffect(() => {
     // auth user dont need to visit auth page
     if (!isLoading) {
+      console.log(router.pathname);
       if (router.pathname === "/auth" && data) {
         router.push("/");
       }

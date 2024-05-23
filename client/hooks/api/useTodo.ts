@@ -6,8 +6,13 @@ import { useToggle } from "../useToggle";
 import { ServerResponse } from "@app/types";
 import { toast } from "sonner";
 
+interface ServerData {
+  title: string;
+  todos: Todo[];
+}
+
 export const useTodo = () => {
-  const [todos, setTodo] = useState<Todo[]>();
+  const [todos, setTodo] = useState<ServerData>();
   const [isLoading, toggleLoading] = useToggle();
   const router = useRouter();
 
@@ -18,7 +23,7 @@ export const useTodo = () => {
       if (router.isReady) {
         try {
           toggleLoading.on();
-          const { data } = await apiHandler.get<ServerResponse<Todo[]>>(
+          const { data } = await apiHandler.get<ServerResponse<ServerData>>(
             `/project/${id}`
           );
           setTodo(data.data);
@@ -33,7 +38,7 @@ export const useTodo = () => {
 
   const getAllTodo = async () => {
     try {
-      const { data } = await apiHandler.get<ServerResponse<Todo[]>>(
+      const { data } = await apiHandler.get<ServerResponse<ServerData>>(
         `/projects/${id}`
       );
       setTodo(data.data);

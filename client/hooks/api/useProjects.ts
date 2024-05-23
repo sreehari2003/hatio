@@ -8,6 +8,17 @@ export const useProjects = () => {
   const [allProjects, setData] = useState<Projects[]>([]);
   const [isLoading, toggleLoading] = useToggle();
 
+  const getAllProjects = async () => {
+    try {
+      const { data } = await apiHandler.get<ServerResponse<Projects[]>>(
+        "/projects"
+      );
+      setData(data.data);
+    } catch {
+      toast.error("Error getting projects");
+    }
+  };
+
   useEffect(() => {
     (async () => {
       try {
@@ -29,5 +40,6 @@ export const useProjects = () => {
   return {
     data: allProjects,
     isLoading,
+    getAllProjects,
   };
 };

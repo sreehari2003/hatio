@@ -7,7 +7,7 @@ import { User } from '@prisma/client';
 import { NewProjectDto } from './dto/new-project-dto';
 
 @UseGuards(AuthGuard('jwt'))
-@Controller('/project')
+@Controller('/projects')
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
