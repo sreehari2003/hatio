@@ -24,7 +24,7 @@ export const useTodo = () => {
         try {
           toggleLoading.on();
           const { data } = await apiHandler.get<ServerResponse<ServerData>>(
-            `/project/${id}`
+            `/todo/${id}`
           );
           setTodo(data.data);
         } catch {
@@ -39,7 +39,7 @@ export const useTodo = () => {
   const getAllTodo = async () => {
     try {
       const { data } = await apiHandler.get<ServerResponse<ServerData>>(
-        `/projects/${id}`
+        `/todo/${id}`
       );
       setTodo(data.data);
     } catch {

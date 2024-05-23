@@ -5,6 +5,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthUser } from 'src/auth/decorator/user.decorator';
 import { User } from '@prisma/client';
 import { NewProjectDto } from './dto/new-project-dto';
+import { Delete, Param } from '@nestjs/common/decorators';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('/projects')
@@ -28,5 +29,13 @@ export class ProjectController {
       data.projectId,
       data.name,
     );
+  }
+
+  @Delete('/:projectId')
+  async deleteProject(
+    @AuthUser() user: User,
+    @Param('projectId') projectId: string,
+  ) {
+    return await this.projectService.deleteProject(user.id, projectId);
   }
 }

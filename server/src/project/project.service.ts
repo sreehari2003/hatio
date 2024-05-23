@@ -95,4 +95,21 @@ export class ProjectService {
       throw new InternalServerErrorException();
     }
   }
+
+  async deleteProject(id: string, projectId: string) {
+    try {
+      await this.prisma.project.delete({
+        where: {
+          id: projectId,
+          userId: id,
+        },
+      });
+      return {
+        ok: true,
+        message: 'project was deleted',
+      };
+    } catch {
+      throw new InternalServerErrorException();
+    }
+  }
 }

@@ -1,42 +1,23 @@
-import { useState } from "react";
 import { IconDelete, IconEdit, IconTickCircle } from "../icons";
-import { NewTask } from "@app/components/Todo/NewTask";
 import { toast } from "sonner";
 import { apiHandler } from "@app/config/apiHandler";
-import { Todo } from "@app/types";
+import { useRouter } from "next/router";
 
 interface Prop {
   title: string;
   description: string;
-  id: number;
-  endDate: Date;
-  deleteTask: (id: number) => Promise<void>;
-  updateTodo: (id: number, updatedTaskProperties: Partial<Todo>) => void;
+  id: string;
   getTodo: () => Promise<void>;
 }
 
-export const Task = ({
-  id,
-  title,
-  description,
-  deleteTask,
-  endDate,
-  updateTodo,
-  getTodo,
-}: Prop) => {
-  const [isEditable, setEdiatble] = useState(false);
-
+export const Task = ({ id, title, description, getTodo }: Prop) => {
+  const router = useRouter();
+  const { id: projectId } = router.query;
   const setAsComplete = async () => {
     try {
-      await apiHandler.put(`/tasks/${id}`, {
-        body: JSON.stringify({
-          todoId: id,
-          complete: true,
-          todoTitle: title,
-          todoDescription: description,
-        }),
+      await apiHandler.patch(`/todo/${projectId}/${id}`, {
+        isCompleted: true,
       });
-
       toast.success("task completed successfully");
       getTodo();
     } catch {
@@ -44,36 +25,41 @@ export const Task = ({
     }
   };
 
-  return (
-    <div key={id} className="list">
-      <div className="title">
-        {!isEditable && (
-          <>
-            <h3>{title}</h3>
-            <div className="icons">
-              <IconDelete onClick={() => deleteTask(id)} className="delete" />
-              <IconTickCircle className="tick" onClick={setAsComplete} />
-              <IconEdit className="edit" onClick={() => setEdiatble(true)} />
-            </div>
-          </>
-        )}
-      </div>
-      <p className={isEditable ? "hidden" : ""}>{description}</p>
+  const deleteTodo = async () => {
+    try {
+      await apiHandler.delete(`/todo/${projectId}/${id}`);
+      toast.success("task deleted successfully");
+      await getTodo();
+    } catch {
+      toast.error("failed to delete task");
+    }
+  };
 
-      {isEditable && (
-        <NewTask
-          setTodo={() => {}}
-          cancelTodo={setEdiatble}
-          defaultValue={{
-            todoTitle: title,
-            todoDescription: description,
-            todoId: id,
-            todoDate: endDate,
-          }}
-          key={id}
-          updateTodo={updateTodo}
-        />
-      )}
+  return (
+    <div
+      key={id}
+      className="border-2 border-gray-600 min-w-[300px] rounded-md p-4 flex flex-col"
+    >
+      <h3 className="text-xl font-medium capitalize text-start">{title}</h3>
+      <div className="flex gap-3"></div>
+      <p className="text-md">{description}</p>
+      <div className="flex mt-5 gap-2">
+        <button className="px-2 py-2 border-green-600 border-2 rounded-md">
+          <IconTickCircle
+            onClick={setAsComplete}
+            className="delete hover:cursor-pointer text-green-600"
+          />
+        </button>
+        <button className="px-3 py-2 border-black border-2 rounded-md">
+          <IconEdit className="delete hover:cursor-pointer" />
+        </button>
+        <button
+          className="px-3 py-2 border-red-600 border-2 rounded-md"
+          onClick={deleteTodo}
+        >
+          <IconDelete className="delete hover:cursor-pointer text-red-600" />
+        </button>
+      </div>
     </div>
   );
 };

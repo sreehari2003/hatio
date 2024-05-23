@@ -5,6 +5,8 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateTodoDto } from './dto/new-todo-dto';
+import { UpdateTodoDto } from './dto/update-todo-dto';
+import { NewProjectDto } from 'src/project/dto/new-project-dto';
 
 @Injectable()
 export class TodoService {
@@ -71,33 +73,49 @@ export class TodoService {
     }
   }
 
-  async updateTodo(userId: string, projectId: string, todoId: string, data) {
-    const project = await this.doesUserHaveProject(userId, projectId);
+  async updateTodo(
+    userId: string,
+    projectId: string,
+    todoId: string,
+    data: UpdateTodoDto,
+  ) {
+    try {
+      const project = await this.doesUserHaveProject(userId, projectId);
 
-    if (!project) {
-      throw new NotFoundException();
+      if (!project) {
+        throw new NotFoundException();
+      }
+
+      const todo = await this.prismaService.todo.findUnique({
+        where: {
+          id: todoId,
+          projectId: projectId,
+        },
+      });
+      if (!todo) {
+        throw new NotFoundException();
+      }
+
+      await this.prismaService.todo.update({
+        where: {
+          id: todoId,
+          projectId: projectId,
+        },
+        data: {
+          title: data.title || todo.title,
+          description: data.description || todo.description,
+          isCompleted: data.hasOwnProperty('isCompleted')
+            ? data.isCompleted
+            : todo.isCompleted,
+        },
+      });
+    } catch (e) {
+      if (e instanceof NotFoundException) {
+        throw new NotFoundException();
+      } else {
+        throw new InternalServerErrorException();
+      }
     }
-
-    const todo = await this.prismaService.todo.findUnique({
-      where: {
-        id: todoId,
-        projectId: projectId,
-      },
-    });
-
-    await this.prismaService.todo.update({
-      where: {
-        id: todoId,
-        projectId: projectId,
-      },
-      data: {
-        title: data.title || todo.title,
-        description: data.description || todo.description,
-        isCompleted: data.hasOwnProperty('isCompleted')
-          ? data.isCompleted
-          : todo.isCompleted,
-      },
-    });
   }
 
   async deleteTodo(todoId: string, userId: string, projectId: string) {

@@ -24,7 +24,7 @@ export const AuthContext = ({ children }: Child): JSX.Element => {
       setData(data);
     } catch (e) {
       console.error("Error Authenticating user");
-      router.push("/");
+      router.push("/auth");
     } finally {
       setLoading(false);
     }
@@ -50,7 +50,6 @@ export const AuthContext = ({ children }: Child): JSX.Element => {
   useEffect(() => {
     // auth user dont need to visit auth page
     if (!isLoading) {
-      console.log(router.pathname);
       if (router.pathname === "/auth" && data) {
         router.push("/");
       }
