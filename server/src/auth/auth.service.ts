@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -52,7 +56,7 @@ export class AuthService {
     };
     const refreshToken = await this.jwtService.signAsync(payload);
 
-    const hashedRefreshToken = await bcrypt.hash(refreshToken, 10); // 10 is the saltRounds, you can adjust this value
+    const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
 
     const updatedUser = await this.userService.updateRefreshToken(
       uid,
@@ -65,15 +69,14 @@ export class AuthService {
   }
 
   async refreshAuthToken(user: User, hashedToken: string) {
-    if (!user) throw new Error('USER_NOT_FOUND');
+    if (!user) throw new NotFoundException();
 
     const isRefreshTokenValid = await bcrypt.compare(
       user.refreshToken,
       hashedToken,
     );
 
-    if (!isRefreshTokenValid)
-      throw new Error('AFTER_GENERATION_INVALID_REFRESH_TOKEN');
+    if (!isRefreshTokenValid) throw new UnauthorizedException();
 
     return await this.generateAuthToken(user.id);
   }

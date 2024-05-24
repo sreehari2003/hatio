@@ -8,12 +8,10 @@ import { toast } from "sonner";
 import * as Tabs from "@radix-ui/react-tabs";
 import { apiHandler } from "@app/config/apiHandler";
 import { useRouter } from "next/router";
-import { memo, useMemo, useState } from "react";
-import { cn } from "@app/utils/cn";
+import { useMemo } from "react";
 
 const TodoPage = () => {
   const { isLoading, data, getAllTodo } = useTodo();
-  const [tabs, setTab] = useState<"pending" | "completed">("pending");
   const [isOpen, toggleOpen] = useToggle();
   const [isTaskOpen, toggleNewTask] = useToggle();
   const router = useRouter();
@@ -26,6 +24,26 @@ const TodoPage = () => {
       router.push("/");
     } catch {
       toast.error("Error deleting project");
+    }
+  };
+
+  const handleExport = async () => {
+    try {
+      const { data } = await apiHandler.post(`/projects/${id}/generate`, {
+        responseType: "blob",
+      });
+
+      const url = window.URL.createObjectURL(new Blob([data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute(
+        "download",
+        `${data?.title.trim().replace(/ /g, "")}.md`
+      );
+      document.body.appendChild(link);
+      link.click();
+    } catch (err) {
+      console.warn("export failed");
     }
   };
 
@@ -69,7 +87,7 @@ const TodoPage = () => {
           </button>
           <button
             className="py-1 px-3 border-black  border-2 rounded-md text-black"
-            onClick={() => {}}
+            onClick={handleExport}
           >
             Export
           </button>
@@ -155,6 +173,7 @@ const TodoPage = () => {
           isOpen={isTaskOpen}
           onToggle={toggleNewTask.off}
           getAllTodo={getAllTodo}
+          type="Create"
         />
       </main>
     </div>

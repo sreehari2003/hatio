@@ -2,6 +2,8 @@ import { IconDelete, IconEdit, IconTickCircle } from "../icons";
 import { toast } from "sonner";
 import { apiHandler } from "@app/config/apiHandler";
 import { useRouter } from "next/router";
+import { NewTask } from "./NewTask";
+import { useToggle } from "@app/hooks/useToggle";
 
 interface Prop {
   title: string;
@@ -12,6 +14,7 @@ interface Prop {
 
 export const Task = ({ id, title, description, getTodo }: Prop) => {
   const router = useRouter();
+  const [isOpen, toggleOpen] = useToggle();
   const { id: projectId } = router.query;
   const setAsComplete = async () => {
     try {
@@ -60,6 +63,17 @@ export const Task = ({ id, title, description, getTodo }: Prop) => {
           <IconDelete className="delete hover:cursor-pointer text-red-600" />
         </button>
       </div>
+      <NewTask
+        isOpen={isOpen}
+        onToggle={toggleOpen.off}
+        getAllTodo={getTodo}
+        type="Edit"
+        defaultValue={{
+          title,
+          description,
+          id,
+        }}
+      />
     </div>
   );
 };

@@ -31,6 +31,14 @@ export class ProjectController {
     );
   }
 
+  @Post('/projectId/generate')
+  async generateStats(
+    @AuthUser() user: User,
+    @Param('projectId') projectId: string,
+  ) {
+    return this.projectService.exportStats(user.id, projectId);
+  }
+
   @Delete('/:projectId')
   async deleteProject(
     @AuthUser() user: User,

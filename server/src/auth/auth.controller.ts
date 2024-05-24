@@ -52,4 +52,17 @@ export class AuthController {
   async getUserInfo(@AuthUser() user: User) {
     return await this.userService.getUserInfo(user.id);
   }
+
+  @Get('/logout')
+  @UseGuards(AuthGuard('jwt'))
+  async logOut(@Response() res) {
+    cookieHandler(
+      res,
+      {
+        accessToken: null,
+        refreshToken: null,
+      },
+      false,
+    );
+  }
 }

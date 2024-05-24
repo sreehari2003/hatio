@@ -18,9 +18,21 @@ interface Props {
   isOpen: boolean;
   onToggle: () => void;
   getAllTodo: () => Promise<void>;
+  defaultValue?: {
+    title: string;
+    description: string;
+    id: string;
+  };
+  type: "Create" | "Edit";
 }
 
-export const NewTask = ({ isOpen, onToggle, getAllTodo }: Props) => {
+export const NewTask = ({
+  isOpen,
+  onToggle,
+  getAllTodo,
+  defaultValue,
+  type = "Create",
+}: Props) => {
   const {
     register,
     handleSubmit,
@@ -28,24 +40,45 @@ export const NewTask = ({ isOpen, onToggle, getAllTodo }: Props) => {
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(todoSchema),
+    defaultValues: {
+      title: defaultValue?.title || "",
+      description: defaultValue?.description || "",
+    },
   });
 
   const router = useRouter();
   const { id } = router.query;
 
   const onSubmit = async (data: FormValues) => {
-    try {
-      await apiHandler.post(`/todo/${id}`, {
-        ...data,
-      });
+    if (type === "Create") {
+      try {
+        await apiHandler.post(`/todo/${id}`, {
+          ...data,
+        });
 
-      toast.success("task created successfully");
-      await getAllTodo();
-    } catch {
-      toast.error("Error creating task");
-    } finally {
-      reset();
-      onToggle();
+        toast.success("task created successfully");
+        await getAllTodo();
+      } catch {
+        toast.error("Error creating task");
+      } finally {
+        reset();
+        onToggle();
+      }
+    }
+    if (type === "Edit") {
+      try {
+        await apiHandler.patch(`/todo/${id}/${defaultValue?.id}`, {
+          ...data,
+        });
+
+        toast.success("task created successfully");
+        await getAllTodo();
+      } catch {
+        toast.error("Error creating task");
+      } finally {
+        reset();
+        onToggle();
+      }
     }
   };
 
@@ -55,7 +88,7 @@ export const NewTask = ({ isOpen, onToggle, getAllTodo }: Props) => {
         <Dialog.Overlay className="bg-[rgba(0,0,0,0.5)] data-[state=open]:animate-overlayShow fixed inset-0" />
         <Dialog.Content className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-white p-[25px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none">
           <Dialog.Title className="text-mauve12 m-0 text-[17px] font-medium">
-            New Task
+            {type === "Create" ? "New" : "Edit"} Task
           </Dialog.Title>
           <Dialog.Description className="text-mauve11 mt-[10px] mb-5 text-[15px] leading-normal">
             Make changes to your task here. Click save when done.
