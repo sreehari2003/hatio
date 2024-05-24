@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { Input } from "../Input";
 import { apiHandler } from "@app/config/apiHandler";
 import { toast } from "sonner";
+import { useRouter } from "next/router";
 
 type FormValues = z.infer<typeof authSchema>;
 
@@ -17,12 +18,15 @@ export const SignUp = ({ toggleOption }: Prop) => {
     resolver: zodResolver(authSchema),
   });
 
+  const router = useRouter();
+
   const onSubmit = async (data: FormValues) => {
     try {
       await apiHandler.post("/auth/register", {
         ...data,
       });
       toast.success("signup success");
+      router.push("/");
     } catch {
       toast.error("error signup");
     }

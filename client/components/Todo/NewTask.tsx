@@ -17,9 +17,10 @@ type FormValues = z.infer<typeof todoSchema>;
 interface Props {
   isOpen: boolean;
   onToggle: () => void;
+  getAllTodo: () => Promise<void>;
 }
 
-export const NewTask = ({ isOpen, onToggle }: Props) => {
+export const NewTask = ({ isOpen, onToggle, getAllTodo }: Props) => {
   const {
     register,
     handleSubmit,
@@ -39,6 +40,7 @@ export const NewTask = ({ isOpen, onToggle }: Props) => {
       });
 
       toast.success("task created successfully");
+      await getAllTodo();
     } catch {
       toast.error("Error creating task");
     } finally {
