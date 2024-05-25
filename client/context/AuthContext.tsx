@@ -3,11 +3,13 @@ import React, { useMemo, createContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { apiHandler } from "@app/config/apiHandler";
 import { User, Child } from "@app/types";
+import { Loader } from "@app/components/Todo/Loader";
 
 interface IAuthTypes {
   user: User | null;
   isLoading: boolean;
   clearData: () => void;
+  setData: React.Dispatch<null | User>;
 }
 export const AuthCtx = createContext({} as IAuthTypes);
 
@@ -43,6 +45,7 @@ export const AuthContext = ({ children }: Child): JSX.Element => {
       user: data,
       clearData,
       isLoading,
+      setData,
     }),
     [isLoading, data]
   );
@@ -54,14 +57,14 @@ export const AuthContext = ({ children }: Child): JSX.Element => {
         router.push("/");
       }
       if (router.pathname !== "/auth" && !data) {
-        router.push("/auth");
+        // router.push("/auth");
       }
     }
   }, [router, data]);
 
   return (
     <AuthCtx.Provider value={response}>
-      <>{children}</>
+      {isLoading ? <Loader /> : <>{children}</>}
     </AuthCtx.Provider>
   );
 };

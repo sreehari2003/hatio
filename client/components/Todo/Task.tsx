@@ -53,7 +53,10 @@ export const Task = ({ id, title, description, getTodo }: Prop) => {
             className="delete hover:cursor-pointer text-green-600"
           />
         </button>
-        <button className="px-3 py-2 border-black border-2 rounded-md">
+        <button
+          className="px-3 py-2 border-black border-2 rounded-md"
+          onClick={toggleOpen.on}
+        >
           <IconEdit className="delete hover:cursor-pointer" />
         </button>
         <button

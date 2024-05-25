@@ -120,43 +120,65 @@ export class ProjectService {
     const completedTodos = jsonData.todos.filter((el) => el.isCompleted);
     const pendingTodos = jsonData.todos.filter((el) => !el.isCompleted);
 
-    let markdown = `# ${jsonData.title}\n\n\n## Table of Contents\n`;
+    let markdown = `# ${jsonData.title}\n\n`;
 
-    completedTodos.forEach((section, index) => {
-      markdown += `${index + 1}. [${section.title}](#${section.title
-        .toLowerCase()
-        .replace(/\s+/g, '-')})\n`;
-    });
+    markdown += `## Summary: ${completedTodos.length}/ ${
+      completedTodos.length + pendingTodos.length
+    } todos completed\n\n`;
+
+    markdown += '## Pending\n';
 
     pendingTodos.forEach((section) => {
-      markdown += `\n## ${section.title}\n\n${section.description}\n`;
+      markdown += `- [ ] ${section.title}\n`;
+    });
+
+    markdown += '\n## Completed\n';
+
+    completedTodos.forEach((section) => {
+      markdown += `- [x] ${section.title}\n`;
     });
 
     return markdown;
   }
+  async exportStats(
+    userId: string,
+    projectId: string,
+  ): Promise<Record<string, any>> {
+    try {
+      const project = await this.prisma.project.findUnique({
+        where: {
+          id: projectId,
+          userId: userId,
+        },
+        select: {
+          todos: true,
+          title: true,
+        },
+      });
 
-  async exportStats(userId: string, projectId: string): Promise<string> {
-    const project = await this.prisma.project.findUnique({
-      where: {
-        id: projectId,
-        userId: userId,
-      },
-      select: {
-        todos: true,
-        title: true,
-      },
-    });
+      const markDown = this.convertJsonToMarkdown(project as ProjectWithTodo);
 
-    const markDown = this.convertJsonToMarkdown(project as ProjectWithTodo);
-
-    const filePath = path.join(
-      __dirname,
-      '..',
-      'files',
-      project.title.trim().replace(/ /g, ''),
-    );
-    fs.writeFileSync(filePath, markDown);
-    return filePath;
+      const filePath = path.join(
+        __dirname,
+        '..',
+        'files',
+        project.title.trim().replace(/ /g, ''),
+      );
+      // Ensure the directory exists
+      const dir = path.dirname(filePath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      fs.writeFileSync(filePath, markDown);
+      return {
+        filePath,
+        fileName: project.title.trim().replace(/ /g, ''),
+      };
+    } catch (e) {
+      throw new InternalServerErrorException({
+        message: e,
+      });
+    }
   }
 }
 

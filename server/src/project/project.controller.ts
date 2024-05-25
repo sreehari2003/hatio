@@ -1,11 +1,22 @@
-import { Body, Controller, Get, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Post,
+  UseGuards,
+  Delete,
+  Param,
+  Res,
+} from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { EditProjectDto } from './dto/edit-project.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthUser } from 'src/auth/decorator/user.decorator';
 import { User } from '@prisma/client';
 import { NewProjectDto } from './dto/new-project-dto';
-import { Delete, Param } from '@nestjs/common/decorators';
+import { Response } from 'express';
+import fs from 'fs';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('/projects')
@@ -31,12 +42,30 @@ export class ProjectController {
     );
   }
 
-  @Post('/projectId/generate')
+  @Post('/:projectId/generate')
   async generateStats(
     @AuthUser() user: User,
     @Param('projectId') projectId: string,
+    @Res() res: Response,
   ) {
-    return this.projectService.exportStats(user.id, projectId);
+    try {
+      const { filePath, fileName } = await this.projectService.exportStats(
+        user.id,
+        projectId,
+      );
+
+      if (!filePath) {
+        return res.status(500).json({ message: 'File not generated' });
+      }
+
+      res.download(filePath, `${fileName}.md`, (err) => {
+        if (err) {
+          return res.status(500).json({ message: 'Error downloading file' });
+        }
+      });
+    } catch (error) {
+      return res.status(500).json({ message: 'Internal server error' });
+    }
   }
 
   @Delete('/:projectId')

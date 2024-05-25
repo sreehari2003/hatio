@@ -29,21 +29,26 @@ const TodoPage = () => {
 
   const handleExport = async () => {
     try {
-      const { data } = await apiHandler.post(`/projects/${id}/generate`, {
-        responseType: "blob",
-      });
+      const response = await apiHandler.post(
+        `/projects/${id}/generate`,
+        {},
+        {
+          responseType: "blob",
+        }
+      );
 
-      const url = window.URL.createObjectURL(new Blob([data]));
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute(
-        "download",
-        `${data?.title.trim().replace(/ /g, "")}.md`
-      );
+      link.setAttribute("download", `${data?.title}.md`);
       document.body.appendChild(link);
       link.click();
+
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch (err) {
-      console.warn("export failed");
+      console.warn("Export failed", err);
     }
   };
 
@@ -98,13 +103,13 @@ const TodoPage = () => {
           <Tabs.List className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
             <Tabs.Trigger
               value="pending"
-              className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+              className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-black/45 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-black/75 data-[state=active]:text-white data-[state=active]:shadow-sm"
             >
               Pending Tasks
             </Tabs.Trigger>
             <Tabs.Trigger
               value="completed"
-              className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+              className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-black/75 data-[state=active]:text-white data-[state=active]:shadow-sm"
             >
               Completed Tasks
             </Tabs.Trigger>
@@ -112,7 +117,7 @@ const TodoPage = () => {
 
           <Tabs.Content
             value="pending"
-            className="mt-2 ring-offset-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="mt-5 ring-offset-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             <span className="text-md">All Pending tasks</span>
             <div className="flex flex-col gap-3  min-w-[300px] mt-5">
@@ -138,7 +143,7 @@ const TodoPage = () => {
 
           <Tabs.Content
             value="completed"
-            className="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="mt-5 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             <span className="text-md">All completed tasks</span>
             <div className="flex flex-col gap-3  min-w-[300px] mt-5">

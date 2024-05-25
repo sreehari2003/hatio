@@ -5,11 +5,12 @@ import { toast } from "sonner";
 
 export const TopBar = () => {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, setData } = useAuth();
 
   const logOut = async () => {
     try {
       await apiHandler.get("/auth/logout");
+      setData(null);
       router.push("/auth");
       toast.success("Logout successfully done");
     } catch {
