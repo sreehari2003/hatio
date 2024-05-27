@@ -34,6 +34,7 @@ export class UserService {
       return {
         ok: true,
         message: 'user was created successfully',
+        user: userInfo.id,
       };
     } catch (e) {
       if (e instanceof ConflictException) {

@@ -41,12 +41,14 @@ export const Task = ({ id, title, description, getTodo }: Prop) => {
   return (
     <div
       key={id}
-      className="border-2 border-gray-600 min-w-[300px] rounded-md p-4 flex flex-col"
+      className="border-2 border-gray-600 w-[300px] rounded-md p-4 flex flex-col justify-between"
     >
       <h3 className="text-xl font-medium capitalize text-start">{title}</h3>
-      <div className="flex gap-3"></div>
-      <p className="text-md">{description}</p>
-      <div className="flex mt-5 gap-2">
+      <div className="flex gap-3 overflow-y-scroll mt-2">
+        <p className="text-md">{description}</p>
+      </div>
+
+      <div className="flex mt-5 gap-3">
         <button className="px-2 py-2 border-green-600 border-2 rounded-md">
           <IconTickCircle
             onClick={setAsComplete}

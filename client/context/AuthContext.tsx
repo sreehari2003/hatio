@@ -47,7 +47,7 @@ export const AuthContext = ({ children }: Child): JSX.Element => {
       isLoading,
       setData,
     }),
-    [isLoading, data]
+    [isLoading, data, setData]
   );
 
   useEffect(() => {

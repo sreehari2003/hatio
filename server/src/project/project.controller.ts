@@ -12,11 +12,10 @@ import {
 import { ProjectService } from './project.service';
 import { EditProjectDto } from './dto/edit-project.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthUser } from 'src/auth/decorator/user.decorator';
+import { AuthUser } from '../auth/decorator/user.decorator';
 import { User } from '@prisma/client';
 import { NewProjectDto } from './dto/new-project-dto';
 import { Response } from 'express';
-import fs from 'fs';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('/projects')

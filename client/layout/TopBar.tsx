@@ -7,6 +7,8 @@ export const TopBar = () => {
   const router = useRouter();
   const { user, setData } = useAuth();
 
+  console.log(user, "iuser from auth");
+
   const logOut = async () => {
     try {
       await apiHandler.get("/auth/logout");

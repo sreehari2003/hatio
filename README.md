@@ -38,3 +38,15 @@
  pnpm run start:dev
 
 ```
+
+### Frontend
+
+- Added zod for schema validation
+- React hook form for form handling
+- Radix ui for components
+
+
+### Backend
+
+- Added auth using passport js
+- Added decorators to guard routes

@@ -98,72 +98,107 @@ const TodoPage = () => {
           </button>
         </div>
       </nav>
-      <main className="flex justify-between mt-5 flex-col items-center">
+      <main className="flex justify-between mt-5 items-center">
         <Tabs.Root defaultValue="pending">
           <Tabs.List className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
             <Tabs.Trigger
+              value="all"
+              className="inline-flex items-center bg-gray-100 justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-black/45 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-black/75 data-[state=active]:text-white data-[state=active]:shadow-sm"
+            >
+              All Tasks
+            </Tabs.Trigger>
+            <Tabs.Trigger
               value="pending"
-              className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-black/45 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-black/75 data-[state=active]:text-white data-[state=active]:shadow-sm"
+              className="inline-flex items-center bg-gray-100 justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-black/45 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-black/75 data-[state=active]:text-white data-[state=active]:shadow-sm"
             >
               Pending Tasks
             </Tabs.Trigger>
             <Tabs.Trigger
               value="completed"
-              className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-black/75 data-[state=active]:text-white data-[state=active]:shadow-sm"
+              className="inline-flex items-center justify-center bg-gray-100 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-black/75 data-[state=active]:text-white data-[state=active]:shadow-sm"
             >
               Completed Tasks
             </Tabs.Trigger>
           </Tabs.List>
 
           <Tabs.Content
-            value="pending"
-            className="mt-5 ring-offset-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            value="all"
+            className="mt-5 ring-offset-black   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
-            <span className="text-md">All Pending tasks</span>
-            <div className="flex flex-col gap-3  min-w-[300px] mt-5">
-              {pendingTasks &&
-                pendingTasks.map((el) => (
-                  <Task
-                    key={el.id}
-                    title={el.title}
-                    getTodo={getAllTodo}
-                    id={el.id}
-                    description={el.description}
-                  />
-                ))}
-
-              <button
-                className="px-3 py-3 border-2 border-blue-500 rounded-md hover:border-blue-300"
+            <span className="text-md">All Tasks</span>
+            <div className="flex gap-2">
+              <div
+                className="min-w-[300px] h-[200px] hover:cursor-pointer mt-5 border-blue-500 border-2 rounded-md hover:border-blue-300 grid place-items-center"
                 onClick={toggleNewTask.on}
               >
                 New task
-              </button>
+              </div>
+              <div className="flex gap-3 mt-5">
+                {data &&
+                  data.todos.map((el) => (
+                    <Task
+                      key={el.id}
+                      title={el.title}
+                      getTodo={getAllTodo}
+                      id={el.id}
+                      description={el.description}
+                    />
+                  ))}
+              </div>
+            </div>
+          </Tabs.Content>
+
+          <Tabs.Content
+            value="pending"
+            className="mt-5 ring-offset-black   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          >
+            <span className="text-md">All Pending tasks</span>
+            <div className="flex gap-2">
+              <div
+                className="min-w-[300px] h-[200px] hover:cursor-pointer mt-5 border-blue-500 border-2 rounded-md hover:border-blue-300 grid place-items-center"
+                onClick={toggleNewTask.on}
+              >
+                New task
+              </div>
+              <div className="flex gap-3 mt-5">
+                {pendingTasks &&
+                  pendingTasks.map((el) => (
+                    <Task
+                      key={el.id}
+                      title={el.title}
+                      getTodo={getAllTodo}
+                      id={el.id}
+                      description={el.description}
+                    />
+                  ))}
+              </div>
             </div>
           </Tabs.Content>
 
           <Tabs.Content
             value="completed"
-            className="mt-5 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="mt-5 ring-offset-black   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
-            <span className="text-md">All completed tasks</span>
-            <div className="flex flex-col gap-3  min-w-[300px] mt-5">
-              {completedTasks &&
-                completedTasks.map((el) => (
-                  <Task
-                    key={el.id}
-                    title={el.title}
-                    getTodo={getAllTodo}
-                    id={el.id}
-                    description={el.description}
-                  />
-                ))}
-
-              <button
-                className="px-3 py-3 border-2 border-blue-500 rounded-md hover:border-blue-300"
+            <span className="text-md">All Completed tasks</span>
+            <div className="flex gap-2">
+              <div
+                className="min-w-[300px] h-[200px] hover:cursor-pointer mt-5 border-blue-500 border-2 rounded-md hover:border-blue-300 grid place-items-center"
                 onClick={toggleNewTask.on}
               >
                 New task
-              </button>
+              </div>
+              <div className="flex gap-3 mt-5">
+                {completedTasks &&
+                  completedTasks.map((el) => (
+                    <Task
+                      key={el.id}
+                      title={el.title}
+                      getTodo={getAllTodo}
+                      id={el.id}
+                      description={el.description}
+                    />
+                  ))}
+              </div>
             </div>
           </Tabs.Content>
 

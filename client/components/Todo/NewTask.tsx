@@ -6,6 +6,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { apiHandler } from "@app/config/apiHandler";
 import { useRouter } from "next/router";
 import { toast } from "sonner";
+import { Span } from "next/dist/trace";
 
 const todoSchema = z.object({
   title: z.string({ message: "Title is required" }).min(1),
@@ -105,13 +106,17 @@ export const NewTask = ({
 
             <div className="mt-2">
               <label htmlFor="description">Description</label>
-              <Input
-                className="mt-2"
+              <textarea
+                className="mt-2 w-full border-2 border-blue-300 resize-none p-3"
                 id="description"
                 {...register("description")}
-                isError={Boolean(errors.description)}
-                message={errors.description?.message}
+                rows={7}
               />
+              {errors.description && (
+                <span className="text-red-600 font-thin">
+                  {errors.description?.message}
+                </span>
+              )}
             </div>
 
             <button

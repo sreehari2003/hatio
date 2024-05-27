@@ -33,7 +33,10 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() data: CreateUserDto) {
-    return this.userService.createUser(data.email, data.password);
+    const user = await this.userService.createUser(data.email, data.password);
+    await this.authService.generateRefreshToken(user.user);
+
+    return user;
   }
 
   @Get('/refresh')
