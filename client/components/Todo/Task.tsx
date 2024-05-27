@@ -4,15 +4,17 @@ import { apiHandler } from "@app/config/apiHandler";
 import { useRouter } from "next/router";
 import { NewTask } from "./NewTask";
 import { useToggle } from "@app/hooks/useToggle";
+import { useMemo } from "react";
 
 interface Prop {
   title: string;
   description: string;
   id: string;
   getTodo: () => Promise<void>;
+  date: Date;
 }
 
-export const Task = ({ id, title, description, getTodo }: Prop) => {
+export const Task = ({ id, title, description, getTodo, date }: Prop) => {
   const router = useRouter();
   const [isOpen, toggleOpen] = useToggle();
   const { id: projectId } = router.query;
@@ -27,6 +29,15 @@ export const Task = ({ id, title, description, getTodo }: Prop) => {
       toast.error("failed to update task");
     }
   };
+
+  const currentDate = useMemo(() => {
+    const convertedDate = new Date(date);
+    const day = convertedDate.getDay();
+    const month = convertedDate.getMonth();
+    const year = convertedDate.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  }, [date]);
 
   const deleteTodo = async () => {
     try {
@@ -43,7 +54,12 @@ export const Task = ({ id, title, description, getTodo }: Prop) => {
       key={id}
       className="border-2 border-gray-600 w-[300px] h-[150px] md:h-[300px] rounded-md p-4 flex flex-col justify-between"
     >
-      <h3 className="text-xl font-medium capitalize text-start">{title}</h3>
+      <div className="flex gap-2 flex-col">
+        <h3 className="text-xl font-medium capitalize text-start">{title}</h3>
+        <h5 className="text-sm font-medium capitalize text-start">
+          {currentDate}
+        </h5>
+      </div>
       <div className="flex gap-3 overflow-y-scroll mt-2 max-h-[200px]">
         <p className="text-md">{description}</p>
       </div>

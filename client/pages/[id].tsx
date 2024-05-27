@@ -142,6 +142,7 @@ const TodoPage = () => {
                     getTodo={getAllTodo}
                     id={el.id}
                     description={el.description}
+                    date={el.createdAt}
                   />
                 ))}
             </div>
@@ -168,6 +169,7 @@ const TodoPage = () => {
                     getTodo={getAllTodo}
                     id={el.id}
                     description={el.description}
+                    date={el.createdAt}
                   />
                 ))}
             </div>
@@ -194,6 +196,7 @@ const TodoPage = () => {
                     getTodo={getAllTodo}
                     id={el.id}
                     description={el.description}
+                    date={el.createdAt}
                   />
                 ))}
             </div>
