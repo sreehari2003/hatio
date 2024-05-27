@@ -12,11 +12,13 @@ export const cookieHandler = (
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     maxAge: 1000 * 60 * 60 * 24, // 1 day
+    sameSite: 'none',
   });
   res.cookie('refresh_token', authToken.refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+    sameSite: 'none',
   });
 
   if (!redirect) {
