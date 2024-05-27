@@ -32,11 +32,14 @@ export class AuthController {
   }
 
   @Post('register')
-  async register(@Body() data: CreateUserDto) {
+  async register(@Body() data: CreateUserDto, @Response() res) {
     const user = await this.userService.createUser(data.email, data.password);
     await this.authService.generateRefreshToken(user.user);
 
-    return user;
+    const tokens = await this.authService.login({
+      id: user.user,
+    });
+    cookieHandler(res, tokens, false);
   }
 
   @Get('/refresh')

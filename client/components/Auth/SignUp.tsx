@@ -6,6 +6,8 @@ import { Input } from "../Input";
 import { apiHandler } from "@app/config/apiHandler";
 import { toast } from "sonner";
 import { useRouter } from "next/router";
+import { AxiosError } from "axios";
+import { useAuth } from "@app/hooks/useAuth";
 
 type FormValues = z.infer<typeof authSchema>;
 
@@ -20,14 +22,23 @@ export const SignUp = ({ toggleOption }: Prop) => {
 
   const router = useRouter();
 
+  const { getUser } = useAuth();
   const onSubmit = async (data: FormValues) => {
     try {
       await apiHandler.post("/auth/register", {
         ...data,
       });
+
       toast.success("signup success");
+      await getUser();
       router.push("/");
-    } catch {
+    } catch (e) {
+      const error = e as AxiosError;
+
+      if (error.response?.status === 409) {
+        toast.error("user with same email-id already exist");
+        return;
+      }
       toast.error("error signup");
     }
   };

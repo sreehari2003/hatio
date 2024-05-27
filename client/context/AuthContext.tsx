@@ -10,6 +10,7 @@ interface IAuthTypes {
   isLoading: boolean;
   clearData: () => void;
   setData: React.Dispatch<null | User>;
+  getUser: () => Promise<void>;
 }
 export const AuthCtx = createContext({} as IAuthTypes);
 
@@ -23,7 +24,7 @@ export const AuthContext = ({ children }: Child): JSX.Element => {
     try {
       setLoading(true);
       const { data } = await apiHandler.get("/auth/user");
-      setData(data);
+      setData(data.data);
     } catch (e) {
       console.error("Error Authenticating user");
       router.push("/auth");
@@ -46,6 +47,7 @@ export const AuthContext = ({ children }: Child): JSX.Element => {
       clearData,
       isLoading,
       setData,
+      getUser,
     }),
     [isLoading, data, setData]
   );
@@ -55,9 +57,6 @@ export const AuthContext = ({ children }: Child): JSX.Element => {
     if (!isLoading) {
       if (router.pathname === "/auth" && data) {
         router.push("/");
-      }
-      if (router.pathname !== "/auth" && !data) {
-        // router.push("/auth");
       }
     }
   }, [router, data]);

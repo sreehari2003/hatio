@@ -126,52 +126,50 @@ const TodoPage = () => {
             className="mt-5 ring-offset-black   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             <span className="text-md">All Tasks</span>
-            <div className="flex gap-2">
+
+            <div className="flex gap-3 mt-5 flex-wrap">
               <div
-                className="min-w-[300px] h-[200px] hover:cursor-pointer mt-5 border-blue-500 border-2 rounded-md hover:border-blue-300 grid place-items-center"
+                className="min-w-[300px] h-[150px] md:h-[300px] hover:cursor-pointer  border-blue-500 border-2 rounded-md hover:border-blue-300 grid place-items-center"
                 onClick={toggleNewTask.on}
               >
                 New task
               </div>
-              <div className="flex gap-3 mt-5">
-                {data &&
-                  data.todos.map((el) => (
-                    <Task
-                      key={el.id}
-                      title={el.title}
-                      getTodo={getAllTodo}
-                      id={el.id}
-                      description={el.description}
-                    />
-                  ))}
-              </div>
+              {data &&
+                data.todos.map((el) => (
+                  <Task
+                    key={el.id}
+                    title={el.title}
+                    getTodo={getAllTodo}
+                    id={el.id}
+                    description={el.description}
+                  />
+                ))}
             </div>
           </Tabs.Content>
 
           <Tabs.Content
             value="pending"
-            className="mt-5 ring-offset-black   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="mt-5 ring-offset-black  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             <span className="text-md">All Pending tasks</span>
-            <div className="flex gap-2">
+
+            <div className="flex gap-3 mt-5 flex-wrap">
               <div
-                className="min-w-[300px] h-[200px] hover:cursor-pointer mt-5 border-blue-500 border-2 rounded-md hover:border-blue-300 grid place-items-center"
+                className="min-w-[300px] h-[150px]  md:h-[300px] hover:cursor-pointer  border-blue-500 border-2 rounded-md hover:border-blue-300 grid place-items-center"
                 onClick={toggleNewTask.on}
               >
                 New task
               </div>
-              <div className="flex gap-3 mt-5">
-                {pendingTasks &&
-                  pendingTasks.map((el) => (
-                    <Task
-                      key={el.id}
-                      title={el.title}
-                      getTodo={getAllTodo}
-                      id={el.id}
-                      description={el.description}
-                    />
-                  ))}
-              </div>
+              {pendingTasks &&
+                pendingTasks.map((el) => (
+                  <Task
+                    key={el.id}
+                    title={el.title}
+                    getTodo={getAllTodo}
+                    id={el.id}
+                    description={el.description}
+                  />
+                ))}
             </div>
           </Tabs.Content>
 
@@ -180,25 +178,24 @@ const TodoPage = () => {
             className="mt-5 ring-offset-black   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             <span className="text-md">All Completed tasks</span>
-            <div className="flex gap-2">
+
+            <div className="flex gap-3 mt-5 flex-wrap">
               <div
-                className="min-w-[300px] h-[200px] hover:cursor-pointer mt-5 border-blue-500 border-2 rounded-md hover:border-blue-300 grid place-items-center"
+                className="min-w-[300px] h-[150px]  md:h-[300px] hover:cursor-pointer  border-blue-500 border-2 rounded-md hover:border-blue-300 grid place-items-center"
                 onClick={toggleNewTask.on}
               >
                 New task
               </div>
-              <div className="flex gap-3 mt-5">
-                {completedTasks &&
-                  completedTasks.map((el) => (
-                    <Task
-                      key={el.id}
-                      title={el.title}
-                      getTodo={getAllTodo}
-                      id={el.id}
-                      description={el.description}
-                    />
-                  ))}
-              </div>
+              {completedTasks &&
+                completedTasks.map((el) => (
+                  <Task
+                    key={el.id}
+                    title={el.title}
+                    getTodo={getAllTodo}
+                    id={el.id}
+                    description={el.description}
+                  />
+                ))}
             </div>
           </Tabs.Content>
 

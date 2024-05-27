@@ -32,9 +32,10 @@ describe('UserService', () => {
 
       expect(
         await service.createUser('jhondoe@gmail.com', 'encryptedPassWord'),
-      ).toEqual({
-        ...user,
-        password: null,
+      ).toStrictEqual({
+        message: 'user was created successfully',
+        ok: true,
+        user: 'userId',
       });
     });
   });

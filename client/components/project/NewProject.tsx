@@ -66,12 +66,12 @@ export const CreateOrEditModal = ({
         name: title,
         projectId: id,
       });
-      toast.success("Project created successfully");
+      toast.success("Project updated successfully");
       if (callBack) {
         callBack();
       }
     } catch {
-      toast.error("Error creating project");
+      toast.error("Error updating project");
     } finally {
       onToggle();
     }

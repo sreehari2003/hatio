@@ -41,10 +41,10 @@ export const Task = ({ id, title, description, getTodo }: Prop) => {
   return (
     <div
       key={id}
-      className="border-2 border-gray-600 w-[300px] rounded-md p-4 flex flex-col justify-between"
+      className="border-2 border-gray-600 w-[300px] h-[150px] md:h-[300px] rounded-md p-4 flex flex-col justify-between"
     >
       <h3 className="text-xl font-medium capitalize text-start">{title}</h3>
-      <div className="flex gap-3 overflow-y-scroll mt-2">
+      <div className="flex gap-3 overflow-y-scroll mt-2 max-h-[200px]">
         <p className="text-md">{description}</p>
       </div>
 
