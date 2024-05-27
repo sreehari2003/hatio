@@ -1,4 +1,4 @@
-# Hatio FTE Assignment
+# Take home assignment for Hatio
 
 ## Todo App with Auth and Gist Support
 
